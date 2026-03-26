@@ -1,4 +1,5 @@
 using GithubStats.Components;
+using MudBlazor.Services;
 
 namespace GithubStats
 {
@@ -13,6 +14,9 @@ namespace GithubStats
                 .AddInteractiveServerComponents();
 
             builder.Services.AddHttpClient();
+
+            // MudBlazor services
+            builder.Services.AddMudServices();
 
             var app = builder.Build();
 

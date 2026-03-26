@@ -1,0 +1,300 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using global::GithubStats.Models
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<PageTitle>GitHub Stats</PageTitle>
+
+<div class="github-page">
+
+    <!-- Översta delen -->
+    <div class="hero-box">
+        <h1>GitHub Stats</h1>
+        <p class="hero-text">
+            Sök på en GitHub-användare och visa profil, språk och repositories.
+        </p>
+
+        <div class="search-section">
+            <label for="username" class="search-label">GitHub-användarnamn:</label>
+
+            <div class="search-row">
+                <!-- Input där användaren skriver in GitHub-namn -->
+                <input id="username" @bind="username" class="search-input" />
+
+                <!-- Knapp som startar sökningen -->
+                <button class="search-button" @onclick="SearchUser">Hämta statistik</button>
+            </div>
+        </div>
+
+        <!-- Visas medan data hämtas -->
+        @if (isLoading)
+        {
+            <p class="loading-text">Hämtar data...</p>
+        }
+
+        <!-- Visar felmeddelande om något går fel -->
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <p class="error-text">@error</p>
+        }
+    </div>
+
+    <!-- Profilkort -->
+    @if (user != null)
+    {
+        <div class="profile-card">
+            <!-- Profilbild -->
+            <img src="@user.avatar_url" alt="Avatar" class="avatar" />
+
+            <div class="profile-info">
+                <h2>@user.name (@user.login)</h2>
+
+                <!-- Visar bio bara om den finns -->
+                @if (!string.IsNullOrWhiteSpace(user.bio))
+                {
+                    <p class="bio-text">@user.bio</p>
+                }
+
+                <!-- Små statistik-boxar -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-number">@user.public_repos</span>
+                        <span class="stat-label">Publika repos</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-number">@user.followers</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-number">@user.following</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-number">@LanguageStats.Count</span>
+                        <span class="stat-label">Antal språk</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Tårta + språklista -->
+    @if (repos.Any() && LanguageStats.Any())
+    {
+        <div class="chart-card">
+            <h3>Språkfördelning</h3>
+            <p class="chart-text">
+                Visar vilka språk som används mest i användarens repositories.
+            </p>
+
+            <div class="language-chart-layout">
+                <!-- Tårta till vänster -->
+                <div class="language-chart-left">
+                    <div class="pie-chart" style="@GetPieChartStyle()"></div>
+                </div>
+
+                <!-- Språklista till höger -->
+                <div class="language-chart-right">
+                    @foreach (var item in LanguageStats.Select((kvp, index) => new
+                    {
+                        Language = kvp.Key,
+                        Count = kvp.Value,
+                        Index = index
+                    }))
+                    {
+                        <div class="language-row-item">
+                            <div class="language-left">
+                                <span class="legend-color" style="background-color:@GetColor(item.Index)"></span>
+                                <span class="language-name">@item.Language</span>
+                            </div>
+
+                            <div class="language-count">@item.Count repo</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Knapp för att öppna/stänga repo-listan -->
+    @if (repos.Any())
+    {
+        <button class="toggle-button" @onclick="ToggleRepos">
+            @(showRepos ? "Dölj repos" : "Visa repos")
+        </button>
+    }
+
+    <!-- Repo-listan visas bara om showRepos är true -->
+    @if (repos.Any() && showRepos)
+    {
+        <div class="repos-section">
+            <h3>Repositories</h3>
+
+            <div class="repo-grid">
+                @foreach (var repo in repos)
+                {
+                    <div class="repo-card">
+                        <strong class="repo-title">@repo.name</strong>
+
+                        @if (!string.IsNullOrWhiteSpace(repo.language))
+                        {
+                            <p class="repo-language">@repo.language</p>
+                        }
+                        else
+                        {
+                            <p class="repo-language">Okänt språk</p>
+                        }
+
+                        <p class="repo-updated">
+                            Senast uppdaterad: @repo.updated_at.ToString("yyyy-MM-dd")
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    // Det användarnamn som skrivs in i inputfältet
+    private string username = "";
+
+    // Objekt för användardata från GitHub
+    private GitHubUser? user;
+
+    // Lista med användarens repos
+    private List<GitHubRepo> repos = new();
+
+    // Felmeddelande om något går fel
+    private string error = "";
+
+    // Visar om laddning pågår
+    private bool isLoading = false;
+
+    // Håller koll på om repo-sektionen ska visas eller inte
+    private bool showRepos = false;
+
+    // Färger till tårtan
+    private readonly string[] pieColors = new[]
+    {
+        "#5c2d91",
+        "#7c4dff",
+        "#9f67ff",
+        "#b692ff",
+        "#d2c1ff",
+        "#6b7280",
+        "#8b5cf6",
+        "#a78bfa"
+    };
+
+    // Grupperar repos efter språk och sorterar från flest till minst
+    private Dictionary<string, int> LanguageStats =>
+        repos
+            .Where(r => !string.IsNullOrWhiteSpace(r.language))
+            .GroupBy(r => r.language!)
+            .OrderByDescending(g => g.Count())
+            .ToDictionary(g => g.Key, g => g.Count());
+
+    // Returnerar en färg baserat på index
+    private string GetColor(int index)
+    {
+        return pieColors[index % pieColors.Length];
+    }
+
+    // Bygger tårtan med conic-gradient
+    private string GetPieChartStyle()
+    {
+        if (!LanguageStats.Any())
+            return "background: #e5e7eb;";
+
+        var total = LanguageStats.Values.Sum();
+        if (total == 0)
+            return "background: #e5e7eb;";
+
+        double currentPercent = 0;
+        var parts = new List<string>();
+        int index = 0;
+
+        foreach (var item in LanguageStats)
+        {
+            var valuePercent = (double)item.Value / total * 100;
+            var nextPercent = currentPercent + valuePercent;
+            var color = GetColor(index);
+
+            parts.Add(
+            $"{color} {currentPercent.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}% " +
+            $"{nextPercent.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}%"
+);
+
+            currentPercent = nextPercent;
+            index++;
+        }
+
+        return $"background: conic-gradient({string.Join(", ", parts)});";
+    }
+
+    // Metod som körs när man klickar på knappen
+    private async Task SearchUser()
+    {
+        // Om input är tom visas felmeddelande
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            error = "Skriv in ett GitHub-användarnamn.";
+            user = null;
+            repos.Clear();
+            showRepos = false;
+            return;
+        }
+
+        // Nollställ innan ny sökning
+        isLoading = true;
+        error = "";
+        user = null;
+        repos.Clear();
+        showRepos = false;
+
+        try
+        {
+            // GitHub API vill ha en User-Agent
+            if (!Http.DefaultRequestHeaders.UserAgent.Any())
+            {
+                Http.DefaultRequestHeaders.UserAgent.ParseAdd("GithubStatsApp");
+            }
+
+            // Hämtar användardata
+            user = await Http.GetFromJsonAsync<GitHubUser>(
+                $"https://api.github.com/users/{username}");
+
+            // Hämtar användarens repos
+            var repoResult = await Http.GetFromJsonAsync<List<GitHubRepo>>(
+                $"https://api.github.com/users/{username}/repos");
+
+            // Om repo-data finns, sortera efter senaste uppdatering
+            if (repoResult is not null)
+            {
+                repos = repoResult
+                    .OrderByDescending(r => r.updated_at)
+                    .ToList();
+            }
+        }
+        catch
+        {
+            error = "Kunde inte hämta data från GitHub.";
+        }
+        finally
+        {
+            // Laddningen avslutas alltid här
+            isLoading = false;
+        }
+    }
+
+    // Öppnar eller stänger repo-listan
+    private void ToggleRepos()
+    {
+        showRepos = !showRepos;
+    }
+}

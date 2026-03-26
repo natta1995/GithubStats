@@ -1,0 +1,352 @@
+﻿.github-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.hero-box {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+    .hero-box h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2.2rem;
+        color: #5c2d91;
+    }
+
+.hero-text {
+    margin: 0 0 1.5rem 0;
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+.search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.search-label {
+    font-weight: 600;
+    color: #374151;
+}
+
+.search-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 240px;
+    padding: 0.9rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+}
+
+    .search-input:focus {
+        border-color: #7c4dff;
+        box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.12);
+    }
+
+.search-button {
+    background: linear-gradient(90deg, #5c2d91, #7c4dff);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+    .search-button:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+    }
+
+.loading-text {
+    margin-top: 1rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.error-text {
+    margin-top: 1rem;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+    .profile-info h2 {
+        margin: 0 0 0.5rem 0;
+        color: #111827;
+    }
+
+.bio-text {
+    color: #6b7280;
+    margin-bottom: 1.25rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.stat-box {
+    background: #f8f7ff;
+    border: 1px solid #ece8ff;
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #5c2d91;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+    .chart-card h3 {
+        margin-top: 0;
+        margin-bottom: 0.35rem;
+    }
+
+.chart-text {
+    margin-top: 0;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.language-chart-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.language-chart-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie-chart {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.35);
+}
+
+.language-chart-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.language-row-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.language-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.language-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.language-count {
+    color: #5c2d91;
+    font-weight: 700;
+}
+
+.toggle-button {
+    margin-top: -0.5rem;
+    align-self: flex-start;
+    background: #f3f0ff;
+    border: 1px solid #dcd6ff;
+    color: #5c2d91;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+    .toggle-button:hover {
+        background: #e9e4ff;
+    }
+
+.repos-section {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+    .repos-section h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: #111827;
+    }
+
+.repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.repo-card {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .repo-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+    }
+
+.repo-title {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #111827;
+    font-size: 1rem;
+}
+
+.repo-language {
+    margin: 0 0 0.35rem 0;
+    color: #6b7280;
+}
+
+.repo-updated {
+    margin: 0;
+    color: #5c2d91;
+    font-weight: 600;
+}
+
+.pie-chart {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 6px solid #f3f4f6;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.language-chart-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.language-chart-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 240px;
+}
+
+.language-chart-right {
+    flex: 1;
+    min-width: 260px;
+}
+
+@media (max-width: 800px) {
+    .language-chart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .language-chart-left {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    .github-page {
+        padding: 1rem;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .avatar {
+        width: 90px;
+        height: 90px;
+    }
+
+    .hero-box,
+    .profile-card,
+    .chart-card,
+    .repos-section {
+        padding: 1.25rem;
+    }
+}
+
